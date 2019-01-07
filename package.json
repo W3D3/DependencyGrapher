@@ -58,6 +58,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "d3": "^5.7.0",
+    "element-ui": "^2.4.11",
     "material-icons": "^0.2.3",
     "vue": "^2.5.16",
     "vue-d3-network": "^0.1.26",

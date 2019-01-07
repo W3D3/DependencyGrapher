@@ -2,13 +2,13 @@
 <template>
   <div id="graph">
     <div class="controls">
+      
       <div>
-        <label>Show label</label>
+        <h3>Settings</h3>
+        <!-- <label>Show label</label> -->
         <!-- <input type="range" v-model="settings.width" min="0" max="200" /> -->
-        <li>
-        <vs-checkbox v-model="settings.showLabel">Primary</vs-checkbox>
-        </li>
-        <input type="checkbox" id="checkbox" v-model="settings.showLable" checked="checked">
+        <el-checkbox v-model="settings.showLabel">Show node label</el-checkbox>
+        <!-- <input type="checkbox" id="checkbox" v-model="settings.showLable" checked="checked"> -->
       </div>
     </div>
     <div class="svg-container" :style="{width: settings.width + '%'}">
@@ -138,15 +138,18 @@ export default {
             d3
               .drag()
               .on('start', function dragstarted (d) {
+                console.log('start')
                 if (!d3.event.active) { that.simulation.alphaTarget(0.3).restart() }
                 d.fx = d.x
                 d.fy = d.y
               })
               .on('drag', function dragged (d) {
+                console.log('drag')
                 d.fx = d3.event.x
                 d.fy = d3.event.y
               })
               .on('end', function dragended (d) {
+                console.log('end')
                 if (!d3.event.active) that.simulation.alphaTarget(0)
                 d.fx = null
                 d.fy = null
@@ -169,22 +172,24 @@ export default {
             .text(function (d) {
               return d.name
             })
-            .attr('x', function (el) { return el.r })
+            .attr('x', function (el) {
+              return el.size + 2 // offset text by radius + margin
+            })
             .attr('y', 3)
         }
 
         // zoom not working
-        const zoom = d3.zoom()
-          .scaleExtent([0.1, 10]) // zoom limit
-          .on('zoom', () => {
-            nodes.style('stroke-width', `${1.5 / d3.event.transform.k}px`)
-            nodes.attr('transform', d3.event.transform) // updated for d3 v4
-          })
+        // const zoom = d3.zoom()
+        //   .scaleExtent([0.1, 10]) // zoom limit
+        //   .on('zoom', () => {
+        //     nodes.style('stroke-width', `${1.5 / d3.event.transform.k}px`)
+        //     nodes.attr('transform', d3.event.transform) // updated for d3 v4
+        //   })
 
-        d3.select('svg').call(zoom)
-        // .call(zoom.transform, d3.zoomIdentity.translate(200, 20).scale(0.25)) //initial size
-          .append('svg:g')
-          .attr('transform', 'translate(100,50) scale(.5,.5)')
+        // d3.select('svg').call(zoom)
+        // // .call(zoom.transform, d3.zoomIdentity.translate(200, 20).scale(0.25)) //initial size
+        //   .append('svg:g')
+        //   .attr('transform', 'translate(100,50) scale(.5,.5)')
       }
       return nodes
     },
@@ -205,6 +210,7 @@ export default {
     }
   },
   updated: function () {
+    console.log('updated')
     var that = this
     that.simulation.nodes(that.graph.nodes).on('tick', function ticked () {
       that.links
@@ -228,6 +234,7 @@ export default {
           return 'translate(' + d.x + ',' + d.y + ')'
         })
     })
+    that.simulation.restart()
   }
 }
 </script>
