@@ -2,14 +2,30 @@
 <template>
   <div id="graph">
     <div class="controls">
-      
-      <div>
-        <h3>Settings</h3>
-        <!-- <label>Show label</label> -->
-        <!-- <input type="range" v-model="settings.width" min="0" max="200" /> -->
-        <el-checkbox v-model="settings.showLabel">Show node label</el-checkbox>
-        <!-- <input type="checkbox" id="checkbox" v-model="settings.showLable" checked="checked"> -->
-      </div>
+
+      <el-card class="box-card">
+        <div slot="header" class="clearfix">
+          <span>Settings</span>
+        </div>
+
+        <div class="setting">
+          <label>Labels</label>
+          <el-checkbox v-model="settings.showLabel">Show node label</el-checkbox>
+        </div>
+
+        <div class="setting">
+          <label>Tightness</label>
+          <el-slider v-model="settings.tightness"></el-slider>
+        </div>
+
+        <div class="setting">
+          <label>Stroke Color</label>
+          <el-color-picker v-model="settings.strokeColor"></el-color-picker>
+          <label>Node Color</label>
+          <el-color-picker v-model="settings.defaultNodeColor"></el-color-picker>
+        </div>
+      </el-card>
+
     </div>
     <div class="svg-container" :style="{width: settings.width + '%'}">
       <!-- <svg id="svg" pointer-events="all" viewBox="0 0 1200 900" preserveAspectRatio="xMinYMin meet">
@@ -75,6 +91,12 @@ var input = {
       source: 1,
       target: 0,
       value: 4
+    },
+    {
+      source: 0,
+      target: 2,
+      value: 3,
+      type: 'none'
     }
   ]
 }
@@ -84,15 +106,18 @@ export default {
     return {
       graph: null,
       simulation: null,
+      labelPosition: 'top',
       color: function (i) {
-        return 'red'
+        return this.settings.defaultNodeColor // TODO change to hashing
       },
       settings: {
         showLabel: true,
-        strokeColor: '#29B5FF',
-        width: 150,
-        svgWigth: 1200,
-        svgHeight: 900
+        strokeColor: '#999',
+        defaultNodeColor: '#FF0000',
+        width: 100,
+        tightness: 0,
+        svgWigth: window.innerWidth,
+        svgHeight: window.innerHeight
       }
     }
   },
@@ -111,7 +136,7 @@ export default {
         d3
           .forceLink(that.graph.links)
           .distance(function (d) {
-            return d.value * -10
+            return d.value * -1 * that.settings.tightness
           })
           .strength(0.1)
       )
@@ -224,8 +249,9 @@ export default {
           .attr('viewBox', '0 -5 10 10')
           .attr('refX', 15)
           .attr('refY', -1.5)
-          .attr('markerWidth', 6)
-          .attr('markerHeight', 6)
+          .attr('markerWidth', 10)
+          .attr('markerHeight', 10)
+          .attr('markerUnits', 'userSpaceOnUse')
           .attr('orient', 'auto')
           .append('svg:path')
           .attr('d', 'M0,-5L10,0L0,5')
@@ -236,6 +262,8 @@ export default {
           .enter().append('svg:path')
           .attr('class', function (d) { return 'link ' + d.type })
           .attr('marker-end', 'url(#end)')
+          .attr('stroke', that.settings.strokeColor)
+          .attr('stroke-width', d => d.value)
 
         return lines
       }
@@ -309,8 +337,13 @@ export default {
           return 'translate(' + d.x + ',' + d.y + ')'
         })
     })
+    that.nodes.on('click', function clicked (node) {
+      console.log(node)
+    })
     that.simulation.restart()
+    that.simulation.tick()
   }
+
 }
 </script>
 <style>
@@ -326,19 +359,25 @@ svg {
   top: 16px;
   left: 16px;
   background: #f8f8f8;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   display: flex;
   flex-direction: column;
-  border: 1px solid black;
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
+  box-shadow: black;
+  /* border: 1px solid black;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); */
   z-index: 20;
 }
 
-/* .svg-container {
-            display: table;
-            border: 1px solid #f8f8f8;
-            box-shadow: 1px 2px 4px rgba(0, 0, 0, .5);
-        } */
+.setting {
+  padding: 5px 0;
+  /* border-bottom: #666 1px solid; */
+  
+}
+
+.setting label {
+  font-size: 80%;
+  border-bottom: #666 1px solid;
+}
 
 .controls > * + * {
   margin-top: 1rem;
@@ -360,8 +399,8 @@ label {
 
 path.link {
   fill: none;
-  stroke: #666;
-  stroke-width: 1.5px;
+  /* stroke: #666; */
+  /* stroke-width: 1.5px; */
 }
 
 </style>

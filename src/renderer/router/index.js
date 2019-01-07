@@ -3,11 +3,12 @@ import Router from 'vue-router'
 // import Vuesax from 'vuesax'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en'
 
-import 'vuesax/dist/vuesax.css' // Vuesax styles
+// import 'vuesax/dist/vuesax.css' // Vuesax styles
 import 'material-icons/iconfont/material-icons.css'
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, { locale })
 Vue.use(Router)
 
 export default new Router({
