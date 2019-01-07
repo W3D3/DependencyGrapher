@@ -59,13 +59,23 @@ var input = {
     {
       source: 0,
       target: 1,
-      value: 4
+      value: 3
     },
     {
       source: 1,
-      target: 2,
-      value: 1
+      target: 0,
+      value: 3
     }
+    // {
+    //   source: 1,
+    //   target: 2,
+    //   value: 1
+    // },
+    // {
+    //   source: 1,
+    //   target: 0,
+    //   value: 25
+    // }
   ]
 }
 export default {
@@ -101,7 +111,7 @@ export default {
         d3
           .forceLink(that.graph.links)
           .distance(function (d) {
-            return d.value * -100
+            return d.value * -10
           })
           .strength(0.1)
       )
@@ -138,18 +148,15 @@ export default {
             d3
               .drag()
               .on('start', function dragstarted (d) {
-                console.log('start')
                 if (!d3.event.active) { that.simulation.alphaTarget(0.3).restart() }
                 d.fx = d.x
                 d.fy = d.y
               })
               .on('drag', function dragged (d) {
-                console.log('drag')
                 d.fx = d3.event.x
                 d.fy = d3.event.y
               })
               .on('end', function dragended (d) {
-                console.log('end')
                 if (!d3.event.active) that.simulation.alphaTarget(0)
                 d.fx = null
                 d.fy = null
@@ -196,16 +203,52 @@ export default {
     links: function () {
       var that = this
       if (that.graph) {
-        return d3
+        var svg = d3
           .select('svg')
-          .append('g')
-          .attr('stroke', '#999')
-          .attr('stroke-opacity', 0.6)
-          .selectAll('line')
+        // var lines = d3
+        //   .select('svg')
+        //   .append('g')
+        //   .attr('stroke', '#999')
+        //   .attr('stroke-opacity', 0.6)
+        //   .selectAll('line')
+        //   .data(that.graph.links)
+        //   .enter()
+        //   .append('line')
+        //   .attr('stroke-width', d => d.value)
+
+          // build the arrow.
+        svg.append('svg:defs').selectAll('marker')
+          .data(['end']) // Different link/path types can be defined here
+          .enter().append('svg:marker') // This section adds in the arrows
+          .attr('id', String)
+          .attr('viewBox', '0 -5 10 10')
+          .attr('refX', 15)
+          .attr('refY', -1.5)
+          .attr('markerWidth', 6)
+          .attr('markerHeight', 6)
+          .attr('orient', 'auto')
+          .append('svg:path')
+          .attr('d', 'M0,-5L10,0L0,5')
+
+          // add the links and the arrows
+        var lines = svg.append('svg:g').selectAll('path')
           .data(that.graph.links)
-          .enter()
-          .append('line')
-          .attr('stroke-width', d => d.value)
+          .enter().append('svg:path')
+          .attr('class', function (d) { return 'link ' + d.type })
+          .attr('marker-end', 'url(#end)')
+
+        lines.attr('d', function (d) {
+          var dx = d.target.x - d.source.x
+          var dy = d.target.y - d.source.y
+          var dr = Math.sqrt(dx * dx + dy * dy)
+          return 'M' +
+            d.source.x + ',' +
+            d.source.y + 'A' +
+            dr + ',' + dr + ' 0 0,1 ' +
+            d.target.x + ',' +
+            d.target.y
+        })
+        return lines
       }
     }
   },
@@ -226,6 +269,18 @@ export default {
         .attr('y2', function (d) {
           return d.target.y
         })
+
+      that.links.attr('d', function (d) {
+        var dx = d.target.x - d.source.x
+        var dy = d.target.y - d.source.y
+        var dr = Math.sqrt(dx * dx + dy * dy)
+        return 'M' +
+            d.source.x + ',' +
+            d.source.y + 'A' +
+            dr + ',' + dr + ' 0 0,1 ' +
+            d.target.x + ',' +
+            d.target.y
+      })
 
       that.nodes
         // .attr('cx', function (d) { return d.x })
@@ -282,4 +337,11 @@ label {
   stroke: #fff;
   stroke-width: 1.5px;
 }
+
+path.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
 </style>
