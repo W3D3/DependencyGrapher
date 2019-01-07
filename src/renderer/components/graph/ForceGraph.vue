@@ -65,17 +65,17 @@ var input = {
       source: 1,
       target: 0,
       value: 3
+    },
+    {
+      source: 1,
+      target: 2,
+      value: 1
+    },
+    {
+      source: 1,
+      target: 0,
+      value: 4
     }
-    // {
-    //   source: 1,
-    //   target: 2,
-    //   value: 1
-    // },
-    // {
-    //   source: 1,
-    //   target: 0,
-    //   value: 25
-    // }
   ]
 }
 export default {
@@ -237,17 +237,6 @@ export default {
           .attr('class', function (d) { return 'link ' + d.type })
           .attr('marker-end', 'url(#end)')
 
-        lines.attr('d', function (d) {
-          var dx = d.target.x - d.source.x
-          var dy = d.target.y - d.source.y
-          var dr = Math.sqrt(dx * dx + dy * dy)
-          return 'M' +
-            d.source.x + ',' +
-            d.source.y + 'A' +
-            dr + ',' + dr + ' 0 0,1 ' +
-            d.target.x + ',' +
-            d.target.y
-        })
         return lines
       }
     }
@@ -270,16 +259,47 @@ export default {
           return d.target.y
         })
 
+      // that.links.attr('d', function (d) {
+      //   var dx = d.target.x - d.source.x
+      //   var dy = d.target.y - d.source.y
+      //   var dr = Math.sqrt(dx * dx + dy * dy)
+      //   return 'M' +
+      //       d.source.x + ',' +
+      //       d.source.y + 'A' +
+      //       dr + ',' + dr + ' 0 0,1 ' +
+      //       d.target.x + ',' +
+      //       d.target.y
+      // })
+
       that.links.attr('d', function (d) {
+        var tightness = -3.0
+        if (d.type === 'straight') { tightness = 1000 }
+
+        // Places the control point for the Bezier on the bisection of the
+        // segment between the source and target points, at a distance
+        // equal to half the distance between the points.
         var dx = d.target.x - d.source.x
         var dy = d.target.y - d.source.y
-        var dr = Math.sqrt(dx * dx + dy * dy)
-        return 'M' +
-            d.source.x + ',' +
-            d.source.y + 'A' +
-            dr + ',' + dr + ' 0 0,1 ' +
-            d.target.x + ',' +
-            d.target.y
+        // var dr = Math.sqrt(dx * dx + dy * dy)
+        var qx = d.source.x + dx / 2.0 - dy / tightness
+        var qy = d.source.y + dy / 2.0 + dx / tightness
+
+        // Calculates the segment from the control point Q to the target
+        // to use it as a direction to wich it will move "node_size" back
+        // from the end point, to finish the edge aprox at the edge of the
+        // node. Note there will be an angular error due to the segment not
+        // having the same direction as the curve at that point.
+        var dqx = d.target.x - qx
+        var dqy = d.target.y - qy
+        var qr = Math.sqrt(dqx * dqx + dqy * dqy)
+
+        var offset = 0.8 * d.target.size
+        var tx = d.target.x - dqx / qr * offset
+        var ty = d.target.y - dqy / qr * offset
+
+        return 'M' + d.source.x + ',' + d.source.y + 'Q' + qx + ',' + qy +
+                ' ' + tx + ',' + ty // to "node_size" pixels before
+        // + " " + d.target.x + "," + d.target.y; // til target
       })
 
       that.nodes
