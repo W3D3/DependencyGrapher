@@ -113,19 +113,19 @@
     padding: 60px 80px;
     width: 100vw;
   } */
-
+  
   #logo {
     height: auto;
     margin-bottom: 20px;
     width: 420px;
   }
-
+/* 
   main {
     display: flex;
     justify-content: space-between;
   }
 
-  main > div { flex-basis: 50%; }
+  main > div { flex-basis: 50%; } */
 
   .left-side {
     display: flex;
@@ -134,7 +134,7 @@
 
   .welcome {
     color: #555;
-    font-size: 23px;
+    /* font-size: 23px; */
     margin-bottom: 10px;
   }
 
