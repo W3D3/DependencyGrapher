@@ -19,8 +19,8 @@
         </div>
 
         <div class="setting">
-          <label>Stroke Color</label>
-          <el-color-picker v-model="settings.strokeColor"></el-color-picker>
+          <!-- <label>Stroke Color</label>
+          <el-color-picker v-model="settings.strokeColor"></el-color-picker> -->
           <label>Node Color</label>
           <el-color-picker v-model="settings.defaultNodeColor"></el-color-picker>
         </div>
@@ -50,8 +50,6 @@
     
 <script>
 import * as d3 from 'd3'
-// import { log } from 'util';
-console.log(d3.zoom)
 
 var input = {
   nodes: [
@@ -98,6 +96,195 @@ var input = {
       value: 3,
       type: 'none'
     }
+  ],
+  wsinput: [
+    {
+      'commit': 'aae4d168f95d09a9a7094626a632e519b7cb1e70',
+      'parentCommits': [
+        '418291e5809a870456ee788c55484ec8217cd177'
+      ],
+      'commitTime': 1425848235,
+      'nodes': [],
+      'links': []
+    },
+    {
+      'commit': '8b3b1c810d3a3b0f386b4fded200f693e8acee9a',
+      'parentCommits': [
+        'aae4d168f95d09a9a7094626a632e519b7cb1e70'
+      ],
+      'commitTime': 1425849449,
+      'nodes': [
+        {
+          'name': 'android.os.Bundle',
+          'size': 1,
+          'id': 'android.os.Bundle'
+        },
+        {
+          'name': 'android.support.v7.app.ActionBarActivity',
+          'size': 1,
+          'id': 'android.support.v7.app.ActionBarActivity'
+        },
+        {
+          'name': 'android.content.Intent',
+          'size': 1,
+          'id': 'android.content.Intent'
+        },
+        {
+          'name': 'com.lgvalle.material_animations.DetailActivity',
+          'size': 15,
+          'id': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'name': 'R.layout.activity_main',
+          'size': 1,
+          'id': 'R.layout.activity_main'
+        },
+        {
+          'name': 'android.transition.Explode',
+          'size': 1,
+          'id': 'android.transition.Explode'
+        },
+        {
+          'name': 'com.lgvalle.material_animations.MainActivity',
+          'size': 16,
+          'id': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'name': 'R.id',
+          'size': 1,
+          'id': 'R.id'
+        },
+        {
+          'name': 'android.app.ActivityOptions',
+          'size': 1,
+          'id': 'android.app.ActivityOptions'
+        },
+        {
+          'name': 'R.layout.activity_details',
+          'size': 1,
+          'id': 'R.layout.activity_details'
+        },
+        {
+          'name': 'android.view.View',
+          'size': 1,
+          'id': 'android.view.View'
+        },
+        {
+          'name': 'R.id.square_red',
+          'size': 1,
+          'id': 'R.id.square_red'
+        },
+        {
+          'name': 'android.view.View.OnClickListener',
+          'size': 1,
+          'id': 'android.view.View.OnClickListener'
+        }
+      ],
+      'links': [
+        {
+          'strength': 3,
+          'delta': 0,
+          'target': 'android.transition.Explode',
+          'source': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'android.os.Bundle',
+          'source': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'R.layout.activity_details',
+          'source': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'strength': 2,
+          'delta': 0,
+          'target': 'android.support.v7.app.ActionBarActivity',
+          'source': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'strength': 7,
+          'delta': -2,
+          'target': 'com.lgvalle.material_animations.DetailActivity',
+          'source': 'com.lgvalle.material_animations.DetailActivity'
+        },
+        {
+          'strength': 13,
+          'delta': 0,
+          'target': 'com.lgvalle.material_animations.MainActivity',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 3,
+          'delta': 0,
+          'target': 'android.transition.Explode',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'R.id',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 4,
+          'delta': 0,
+          'target': 'android.app.ActivityOptions',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'android.os.Bundle',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 4,
+          'delta': 0,
+          'target': 'android.view.View',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 2,
+          'delta': 0,
+          'target': 'android.support.v7.app.ActionBarActivity',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 2,
+          'delta': 0,
+          'target': 'android.content.Intent',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'com.lgvalle.material_animations.DetailActivity',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'R.layout.activity_main',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'R.id.square_red',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        },
+        {
+          'strength': 1,
+          'delta': 0,
+          'target': 'android.view.View.OnClickListener',
+          'source': 'com.lgvalle.material_animations.MainActivity'
+        }
+      ]
+    }
   ]
 }
 export default {
@@ -124,8 +311,10 @@ export default {
   mounted: function () {
     var that = this
     console.log('mounted')
-    var graph = input
+    var graph = {}// = input
     //   if (error) throw error
+    graph.nodes = input.wsinput[1].nodes
+    graph.links = input.wsinput[1].links
     that.graph = graph
     console.log('json')
 
@@ -135,8 +324,9 @@ export default {
         'link',
         d3
           .forceLink(that.graph.links)
+          .id(function (d) { return d.id })
           .distance(function (d) {
-            return d.value * -1 * that.settings.tightness
+            return d.strength * -1 * that.settings.tightness
           })
           .strength(0.1)
       )
@@ -191,6 +381,7 @@ export default {
         nodes
           .append('circle')
           .attr('r', 5)
+          // TODO get size of whole file
           .attr('r', function (d) {
             return d.size
           })
@@ -263,7 +454,7 @@ export default {
           .attr('class', function (d) { return 'link ' + d.type })
           .attr('marker-end', 'url(#end)')
           .attr('stroke', that.settings.strokeColor)
-          .attr('stroke-width', d => d.value)
+          .attr('stroke-width', d => d.strength)
 
         return lines
       }
@@ -376,7 +567,7 @@ svg {
 
 .setting label {
   font-size: 80%;
-  border-bottom: #666 1px solid;
+  /* border-bottom: #666 1px solid; */
 }
 
 .controls > * + * {

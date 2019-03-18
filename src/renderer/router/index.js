@@ -19,8 +19,9 @@ export default new Router({
       component: require('@/components/LandingPage').default
     },
     {
-      path: '*',
-      redirect: '/'
+      path: '/graph',
+      name: 'graph',
+      component: require('@/components/GraphingPage').default
     }
   ]
 })
