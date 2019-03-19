@@ -24,6 +24,10 @@
           <label>Node Color</label>
           <el-color-picker v-model="settings.defaultNodeColor"></el-color-picker>
         </div>
+
+        <router-link to="/">
+            <el-button>Back to Import</el-button>
+          </router-link>
       </el-card>
 
     </div>

@@ -16,12 +16,17 @@ export default new Router({
     {
       path: '/',
       name: 'landing-page',
-      component: require('@/components/LandingPage').default
+      component: require('@/components/ImportPage').default
     },
     {
       path: '/graph',
       name: 'graph',
       component: require('@/components/GraphingPage').default
+    },
+    {
+      path: '/simple',
+      name: 'simple',
+      component: require('@/components/SimpleGraph').default
     }
   ]
 })

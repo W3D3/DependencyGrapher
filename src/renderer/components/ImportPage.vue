@@ -4,13 +4,19 @@
     <main>
       <!-- <force-graph /> -->
       <div class="left-side">
-        <span class="title">Welcome to your new project!!</span>
+        <span class="title">Dependency Analyzer <el-tag type="danger">ALPHA</el-tag></span>
         <el-form ref="form" :model="form" >
           <el-form-item label="Local path">
-            <el-input v-model="form.path"></el-input>
+            <el-input v-model="form.path" readonly></el-input>
+            <input class="custom-file-input" @change="previewFiles" type="file" webkitdirectory />
+
           </el-form-item>
           <el-form-item label="Webservice URL">
             <el-input v-model="form.url"></el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="onSubmit">Analyze</el-button>
+            <el-button>Cancel</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -23,9 +29,9 @@
             internal configurations, using the project structure, building your application,
             and so much more.
           </p>
-          <button
+          <el-button
             @click="open('https://simulatedgreg.gitbooks.io/electron-vue/content/')"
-          >Read the Docs</button>
+          >Read the Docs</el-button>
           <br>
           <br>
         </div>
@@ -49,6 +55,7 @@
 // import D3Network from 'vue-d3-network'
 // import SimpleGraph from './SimpleGraph'
 // import ForceGraph from './graph/ForceGraph'
+import axios from 'axios'
 
 export default {
   data () {
@@ -61,14 +68,28 @@ export default {
   },
   methods: {
     onSubmit () {
-      console.log('submit!')
+      console.log('submit:' + this.form.url)
+      axios.post('/dependencies/project', this.form.url)
+        .then(function (response) {
+          console.log(response)
+        })
+        .catch(function (error) {
+          console.log(error)
+        })
+    },
+    previewFiles (event) {
+      console.log(event.target.files)
+      if (event.target.files.length > 0) {
+        this.form.path = event.target.files[0].path
+      }
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss">
 @import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro");
+// @import "node_modules/element-ui/lib/theme-chalk/button.css";
 
 * {
   box-sizing: border-box;
@@ -105,9 +126,11 @@ main {
 main > div {
   flex-basis: 50%;
 }
-*/ .left-side {
+
+.left-side {
   display: flex;
   flex-direction: column;
+  padding: 20px
 }
 
 .welcome {
@@ -133,5 +156,50 @@ main > div {
   margin-bottom: 10px;
 }
 
-/* d3 stuff */
+el-form {
+  margin-right: 3em;
+}
+.custom-file-input {
+  color: transparent;
+}
+.custom-file-input::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.custom-file-input::before {
+  content: 'Select folder of git repo';
+  display: inline-block;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  background: #fff;
+  border: 1px solid #dcdfe6;
+  color: #606266;
+  -webkit-appearance: none;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  outline: 0;
+  margin: 0;
+  -webkit-transition: .1s;
+  transition: .1s;
+  font-weight: 500;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  padding: 12px 20px;
+  font-size: 14px;
+  border-radius: 4px
+}
+
+.custom-file-input:hover::before {
+  border-color: black;
+}
+
+.custom-file-input:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+  // @extend .el-button;
+
+
 </style>
