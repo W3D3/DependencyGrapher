@@ -451,7 +451,7 @@ export default {
         var lines = svg.append('svg:g').selectAll('path')
           .data(that.graph.links)
           .enter().append('svg:path')
-          .attr('class', function (d) { return 'link ' + d.type })
+          .attr('class', function (d) { return 'link ' + d.delta })
           .attr('marker-end', 'url(#end)')
           .attr('stroke', that.settings.strokeColor)
           .attr('stroke-width', d => d.strength)
@@ -494,6 +494,11 @@ export default {
         var tightness = -3.0
         if (d.type === 'straight') { tightness = 1000 }
 
+        var x1 = d.source.x
+        var y1 = d.source.y
+        var x2 = d.target.x
+        var y2 = d.target.y
+
         // Places the control point for the Bezier on the bisection of the
         // segment between the source and target points, at a distance
         // equal to half the distance between the points.
@@ -515,6 +520,30 @@ export default {
         var offset = 0.8 * d.target.size
         var tx = d.target.x - dqx / qr * offset
         var ty = d.target.y - dqy / qr * offset
+
+        if (x1 === x2 && y1 === y2) {
+          // Fiddle with this angle to get loop oriented.
+          var xRotation = -45
+
+          var sweep = 1 // 1 or 0
+          // Needs to be 1.
+          var largeArc = 1
+
+          // Change sweep to change orientation of loop.
+          // sweep = 0;
+
+          // Make drx and dry different to get an ellipse
+          // instead of a circle.
+          var drx = 20
+          var dry = 20
+
+          // For whatever reason the arc collapses to a point if the beginning
+          // and ending points of the arc are the same, so kludge it.
+          x2 = x2 + 1
+          y2 = y2 + 1
+
+          return 'M' + x1 + ',' + y1 + 'A' + drx + ',' + dry + ' ' + xRotation + ',' + largeArc + ',' + sweep + ' ' + x2 + ',' + y2
+        }
 
         return 'M' + d.source.x + ',' + d.source.y + 'Q' + qx + ',' + qy +
                 ' ' + tx + ',' + ty // to "node_size" pixels before
