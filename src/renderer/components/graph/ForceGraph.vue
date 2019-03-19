@@ -1,4 +1,4 @@
-
+<!-- eslint-disable camelcase -->
 <template>
   <div id="graph">
     <div class="controls">
@@ -40,15 +40,18 @@
         :center="false"
     > -->
         <svg id="svg" pointer-events="all" preserveAspectRatio="xMinYMin meet">
-        <g :id="links"></g>
-        <g :id="nodes"></g>
+          <g class="all">
+            <g :id="links"></g>
+            <g :id="nodes"></g>
+          </g>
       </svg>
     <!-- </SvgPanZoom>` -->
     </div>
   </div>
 </template>
-    
+<!-- eslint-disable -->
 <script>
+
 import * as d3 from 'd3'
 
 var input = {
@@ -336,17 +339,26 @@ export default {
         'center',
         d3.forceCenter(that.settings.svgWigth / 2, that.settings.svgHeight / 2)
       )
+    // add zoom capabilities
+    var zoom_handler = d3.zoom()
+      .on('zoom', function () {
+        d3.select('.all').attr('transform', d3.event.transform)
+      })
+
+    zoom_handler(d3.select('svg'))
   },
   computed: {
     nodes: function () {
       console.log('recalculating nodes')
       var that = this
       if (that.graph) {
+        // get encompassing group for the zoom
+        // var all = d3.select('all')
         d3.select('svg')
           .selectAll('.nodes')
           .remove()
         var nodes = d3
-          .select('svg')
+          .select('.all')
           .append('g')
           .attr('class', 'nodes')
           .selectAll('.node')
@@ -419,8 +431,8 @@ export default {
     links: function () {
       var that = this
       if (that.graph) {
-        var svg = d3
-          .select('svg')
+        var all = d3
+          .select('.all')
         // var lines = d3
         //   .select('svg')
         //   .append('g')
@@ -433,7 +445,7 @@ export default {
         //   .attr('stroke-width', d => d.value)
 
           // build the arrow.
-        svg.append('svg:defs').selectAll('marker')
+        all.append('svg:defs').selectAll('marker')
           .data(['end']) // Different link/path types can be defined here
           .enter().append('svg:marker') // This section adds in the arrows
           .attr('id', String)
@@ -448,7 +460,7 @@ export default {
           .attr('d', 'M0,-5L10,0L0,5')
 
           // add the links and the arrows
-        var lines = svg.append('svg:g').selectAll('path')
+        var lines = all.append('svg:g').selectAll('path')
           .data(that.graph.links)
           .enter().append('svg:path')
           .attr('class', function (d) { return 'link ' + d.delta })
@@ -463,6 +475,7 @@ export default {
   updated: function () {
     console.log('updated')
     var that = this
+    that.simulation.alphaTarget(0.1).restart()
     that.simulation.nodes(that.graph.nodes).on('tick', function ticked () {
       that.links
         .attr('x1', function (d) {
@@ -521,6 +534,7 @@ export default {
         var tx = d.target.x - dqx / qr * offset
         var ty = d.target.y - dqy / qr * offset
 
+        // Self dependencies ie. links to one self
         if (x1 === x2 && y1 === y2) {
           // Fiddle with this angle to get loop oriented.
           var xRotation = -45
