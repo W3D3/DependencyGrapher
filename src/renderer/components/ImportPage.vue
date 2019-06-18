@@ -2,6 +2,7 @@
   <div id="wrapper">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
     <main>
+      <!-- <sidebar /> -->
       <!-- <force-graph /> -->
       <div class="left-side">
         <span class="title">Dependency Analyzer <el-tag type="danger">ALPHA</el-tag></span>
@@ -9,8 +10,16 @@
           <el-form-item label="Local path">
             <el-input v-model="form.path" readonly></el-input>
             <input class="custom-file-input" @change="previewFiles" type="file" webkitdirectory />
-
           </el-form-item>
+          
+          <el-form-item label="Commit">
+            <el-input v-model="form.commit"></el-input>
+          </el-form-item>
+
+          <el-form-item label="Module">
+            <el-input v-model="form.module"></el-input>
+          </el-form-item>
+
           <el-form-item label="Webservice URL">
             <el-input v-model="form.url"></el-input>
           </el-form-item>
@@ -22,7 +31,7 @@
       </div>
 
       <div class="right-side">
-        <div class="doc">
+        <!-- <div class="doc">
           <div class="title">Getting Started</div>
           <p>
             electron-vue comes packed with detailed documentation that covers everything from
@@ -34,9 +43,9 @@
           >Read the Docs</el-button>
           <br>
           <br>
-        </div>
+        </div> -->
         <div class="doc">
-          <div class="title alt">Other Documentation</div>
+          <div class="title alt">Change View</div>
           <router-link to="/graph">
             <el-button>Graph</el-button>
           </router-link>
@@ -55,9 +64,28 @@
 // import D3Network from 'vue-d3-network'
 // import SimpleGraph from './SimpleGraph'
 // import ForceGraph from './graph/ForceGraph'
-import axios from 'axios'
+// import axios from 'axios'
+const { ipcRenderer } = require('electron')
 
 export default {
+  created () {
+    // Alias the component instance as `vm`, so that we
+    // can access it inside the promise function
+    var vm = this
+    ipcRenderer.on('import-reply', (event, arg) => {
+      console.log(arg)
+      vm.depdiffs = arg
+      vm.$router.push({ name: 'graph', params: { depdiffs: arg } })
+    })
+    ipcRenderer.on('error-reply', (event, arg) => {
+      this.$notify({
+        title: 'Error',
+        message: arg,
+        duration: 0,
+        type: 'error'
+      })
+    })
+  },
   data () {
     return {
       form: {
@@ -69,12 +97,18 @@ export default {
   methods: {
     onSubmit () {
       console.log('submit:' + this.form.url)
-      axios.post('/dependencies/project', this.form.url)
-        .then(function (response) {
-          console.log(response)
-        })
-        .catch(function (error) {
-          console.log(error)
+
+      // Send information to the main process
+      // if a listener has been set, then the main process
+      // will react to the request !
+      ipcRenderer.send('request-import',
+        {
+          url: this.form.url,
+          data: {
+            path: this.form.path,
+            commit: this.form.commit,
+            module: this.form.module
+          }
         })
     },
     previewFiles (event) {
@@ -189,7 +223,7 @@ el-form {
   -ms-user-select: none;
   padding: 12px 20px;
   font-size: 14px;
-  border-radius: 4px
+  border-radius: 4px;
 }
 
 .custom-file-input:hover::before {

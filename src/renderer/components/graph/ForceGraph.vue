@@ -25,12 +25,27 @@
           <el-color-picker v-model="settings.defaultNodeColor"></el-color-picker>
         </div>
 
+        <div class="setting">
+          <el-button v-on:click="restartSimulation">Restart Simulation</el-button> 
+        </div>
+        <div class="setting">
+          <el-button v-on:click="stopSimulation" type="warning">Stop Simulation</el-button>
+        </div>
+         <el-divider></el-divider>
+
         <router-link to="/">
             <el-button>Back to Import</el-button>
           </router-link>
       </el-card>
 
     </div>
+    <!-- <div class="bottom" id="gitGraph" >
+      <div class="bot-item" /> 
+      <el-card class="box-card bot-item">
+        Hi
+      </el-card>
+
+    </div> -->
     <div class="svg-container" :style="{width: settings.width + '%'}">
       <!-- <svg id="svg" pointer-events="all" viewBox="0 0 1200 900" preserveAspectRatio="xMinYMin meet">
         <g :id="links"></g>
@@ -57,245 +72,12 @@
 <script>
 
 import * as d3 from 'd3'
+// import { createGitgraph, Orientation } from '@gitgraph/js'
 
-var input = {
-  nodes: [
-    {
-      id: 1,
-      name: 'java.lang.String',
-      size: 5
-    },
-    {
-      id: 2,
-      name: 'java.lang.Integer',
-      size: 14
-    },
-    {
-      id: 3,
-      name: 'java.lang.Something',
-      size: 21
-    }
-  ],
-  links: [
-    {
-      source: 0,
-      target: 1,
-      value: 3
-    },
-    {
-      source: 1,
-      target: 0,
-      value: 3
-    },
-    {
-      source: 1,
-      target: 2,
-      value: 1
-    },
-    {
-      source: 1,
-      target: 0,
-      value: 4
-    },
-    {
-      source: 0,
-      target: 2,
-      value: 3,
-      type: 'none'
-    }
-  ],
-  wsinput: [
-    {
-      'commit': 'aae4d168f95d09a9a7094626a632e519b7cb1e70',
-      'parentCommits': [
-        '418291e5809a870456ee788c55484ec8217cd177'
-      ],
-      'commitTime': 1425848235,
-      'nodes': [],
-      'links': []
-    },
-    {
-      'commit': '8b3b1c810d3a3b0f386b4fded200f693e8acee9a',
-      'parentCommits': [
-        'aae4d168f95d09a9a7094626a632e519b7cb1e70'
-      ],
-      'commitTime': 1425849449,
-      'nodes': [
-        {
-          'name': 'android.os.Bundle',
-          'size': 1,
-          'id': 'android.os.Bundle'
-        },
-        {
-          'name': 'android.support.v7.app.ActionBarActivity',
-          'size': 1,
-          'id': 'android.support.v7.app.ActionBarActivity'
-        },
-        {
-          'name': 'android.content.Intent',
-          'size': 1,
-          'id': 'android.content.Intent'
-        },
-        {
-          'name': 'com.lgvalle.material_animations.DetailActivity',
-          'size': 15,
-          'id': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'name': 'R.layout.activity_main',
-          'size': 1,
-          'id': 'R.layout.activity_main'
-        },
-        {
-          'name': 'android.transition.Explode',
-          'size': 1,
-          'id': 'android.transition.Explode'
-        },
-        {
-          'name': 'com.lgvalle.material_animations.MainActivity',
-          'size': 16,
-          'id': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'name': 'R.id',
-          'size': 1,
-          'id': 'R.id'
-        },
-        {
-          'name': 'android.app.ActivityOptions',
-          'size': 1,
-          'id': 'android.app.ActivityOptions'
-        },
-        {
-          'name': 'R.layout.activity_details',
-          'size': 1,
-          'id': 'R.layout.activity_details'
-        },
-        {
-          'name': 'android.view.View',
-          'size': 1,
-          'id': 'android.view.View'
-        },
-        {
-          'name': 'R.id.square_red',
-          'size': 1,
-          'id': 'R.id.square_red'
-        },
-        {
-          'name': 'android.view.View.OnClickListener',
-          'size': 1,
-          'id': 'android.view.View.OnClickListener'
-        }
-      ],
-      'links': [
-        {
-          'strength': 3,
-          'delta': 0,
-          'target': 'android.transition.Explode',
-          'source': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'android.os.Bundle',
-          'source': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'R.layout.activity_details',
-          'source': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'strength': 2,
-          'delta': 0,
-          'target': 'android.support.v7.app.ActionBarActivity',
-          'source': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'strength': 7,
-          'delta': -2,
-          'target': 'com.lgvalle.material_animations.DetailActivity',
-          'source': 'com.lgvalle.material_animations.DetailActivity'
-        },
-        {
-          'strength': 13,
-          'delta': 0,
-          'target': 'com.lgvalle.material_animations.MainActivity',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 3,
-          'delta': 0,
-          'target': 'android.transition.Explode',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'R.id',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 4,
-          'delta': 0,
-          'target': 'android.app.ActivityOptions',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'android.os.Bundle',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 4,
-          'delta': 0,
-          'target': 'android.view.View',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 2,
-          'delta': 0,
-          'target': 'android.support.v7.app.ActionBarActivity',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 2,
-          'delta': 0,
-          'target': 'android.content.Intent',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'com.lgvalle.material_animations.DetailActivity',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'R.layout.activity_main',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'R.id.square_red',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        },
-        {
-          'strength': 1,
-          'delta': 0,
-          'target': 'android.view.View.OnClickListener',
-          'source': 'com.lgvalle.material_animations.MainActivity'
-        }
-      ]
-    }
-  ]
-}
 export default {
-
+  props: {
+    wsdata: Object
+  },
   data: function () {
     return {
       graph: null,
@@ -315,13 +97,23 @@ export default {
       }
     }
   },
+  methods: {
+    stopSimulation: function (event) {
+      // `this` inside methods points to the Vue instance
+      this.simulation.stop()
+    },
+    restartSimulation: function (event) {
+      // `this` inside methods points to the Vue instance
+      this.simulation.restart()
+    }
+  },
   mounted: function () {
     var that = this
     console.log('mounted')
     var graph = {}// = input
     //   if (error) throw error
-    graph.nodes = input.wsinput[1].nodes
-    graph.links = input.wsinput[1].links
+    graph.nodes = this.wsdata.nodes
+    graph.links = this.wsdata.links
     that.graph = graph
     console.log('json')
 
@@ -350,6 +142,71 @@ export default {
       })
 
     zoom_handler(d3.select('svg'))
+
+    // // setup gitGraph
+    // const graphContainer = document.getElementById('gitGraph')
+    // // Instantiate the graph.
+    // console.log(Orientation)
+    // const gitgraph = createGitgraph(graphContainer, {
+    //   orientation: Orientation.Horizontal
+    // })
+
+    // // Simulate git commands with Gitgraph API.
+    // const master = gitgraph.branch('master')
+    // const onClick = function (id) {
+    //   console.log(id)
+    // }
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+
+    // const develop = gitgraph.branch('develop')
+    // develop.commit('Add TypeScript')
+
+    // const aFeature = gitgraph.branch('a-feature')
+    // aFeature
+    //   .commit('Make it work')
+    //   .commit({ subject: 'Make it right', hash: 'test' })
+    //   .commit('Make it fast')
+
+    // develop.merge(aFeature)
+    // develop.commit('Prepare v1')
+
+    // master.merge(develop).tag('v1.0.0')
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+    // master.commit({
+    //   subject: 'Hello',
+    //   onClick: onClick,
+    //   onMessageClick: onClick
+    // })
+
+    // const svg = document.querySelector('#gitGraph > svg')
   },
   computed: {
     nodes: function () {
@@ -399,7 +256,7 @@ export default {
           .attr('r', 5)
           // TODO get size of whole file
           .attr('r', function (d) {
-            return d.size
+            return Math.log(d.size) * 3
           })
           .attr('fill', function (d) {
             return that.color(d.id)
@@ -461,6 +318,7 @@ export default {
           .attr('markerUnits', 'userSpaceOnUse')
           .attr('orient', 'auto')
           .append('svg:path')
+          .attr('fill', '#000')
           .attr('d', 'M0,-5L10,0L0,5')
 
           // add the links and the arrows
@@ -470,7 +328,7 @@ export default {
           .attr('class', function (d) { return 'link ' + d.delta })
           .attr('marker-end', 'url(#end)')
           .attr('stroke', that.settings.strokeColor)
-          .attr('stroke-width', d => d.strength)
+          .attr('stroke-width', d => Math.ceil(Math.log(d.strength) + 1) * 2)
 
         return lines
       }
@@ -479,7 +337,7 @@ export default {
   updated: function () {
     console.log('updated')
     var that = this
-    that.simulation.alphaTarget(0.1).restart()
+    that.simulation.alphaTarget(0).restart()
     that.simulation.nodes(that.graph.nodes).on('tick', function ticked () {
       that.links
         .attr('x1', function (d) {
@@ -578,10 +436,9 @@ export default {
     that.nodes.on('click', function clicked (node) {
       console.log(node)
     })
-    that.simulation.restart()
-    that.simulation.tick()
+    // that.simulation.restart()
+    // that.simulation.tick()
   }
-
 }
 </script>
 <style>
@@ -605,6 +462,41 @@ svg {
   box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); */
   z-index: 20;
 }
+
+.bottom {
+  position: fixed;
+  height: 200px;
+  bottom: 16px;
+  left: 16px;
+  /* margin-right: 16px; */
+  /* right: 16px; */
+  width: 500px;
+  background: #f8f8f8;
+  /* padding: 0.5rem; */
+  /* display: flex; */
+  /* flex-direction: row; */
+  box-shadow: black;
+  /* border: 1px solid black;
+  box-shadow: 1px 2px 4px rgba(0, 0, 0, .5); */
+  z-index: 20;
+  flex-wrap: nowrap;
+  overflow: scroll;
+  border: #000 1px solid;
+}
+
+.bot-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottom svg { 
+  height:200px;
+  width: 5000px;
+  border:1px dotted #ccc;
+  background-color: #ccc;
+  position: relative; }
+
 
 .setting {
   padding: 5px 0;

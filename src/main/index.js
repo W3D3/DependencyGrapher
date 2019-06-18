@@ -1,6 +1,7 @@
 'use strict'
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
+import axios from 'axios'
 
 /**
  * Set `__static` path to static files in production
@@ -44,6 +45,31 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow()
   }
+})
+
+// Attach listener in the main process with the given ID
+ipcMain.on('request-mainprocess-action', (event, arg) => {
+  console.log(
+    arg
+  )
+})
+
+ipcMain.on('request-import', (event, arg) => {
+  console.log(arg)
+  axios.post(arg.url + 'dependencies/project',
+    {
+      path: arg.data.path,
+      commit: arg.data.commit,
+      module: arg.data.module
+    })
+    .then(function (response) {
+      console.log(response)
+      event.sender.send('import-reply', response.data)
+    })
+    .catch(function (error) {
+      console.error(error)
+      event.sender.send('error-reply', error)
+    })
 })
 
 /**

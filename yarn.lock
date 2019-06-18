@@ -97,6 +97,18 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@gitgraph/core@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@gitgraph/core/-/core-1.4.0.tgz#afeab254b79851e77dc3aaca73c18eb8bde7299d"
+  integrity sha512-jXu4BCil3pK73qxtCN+vfvCQpf7/eGnqR5S2hHWRqgyuMuoSZCjnDXf6xdx51pxsd5ivOSKT/JNTg9kgn50uWg==
+
+"@gitgraph/js@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@gitgraph/js/-/js-1.3.0.tgz#30c3afb7651d4866bf0c313551df8910a7b9cb4d"
+  integrity sha512-klTPIjCrdSP0Fzgy7wpqLJvde5mR053fGbn+oRmP5Q4PLWDBc6Hutqb3/AwqktIGF1O4nVXzSP1LHD/jj1RtQg==
+  dependencies:
+    "@gitgraph/core" "1.4.0"
+
 "@types/node@^8.0.24":
   version "8.10.38"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.10.38.tgz#e05c201a668492e534b48102aca0294898f449f6"
@@ -5120,6 +5132,13 @@ getpass@^0.1.1:
   integrity sha1-Xv+OPmhNVprkyysSgmBOi6YhSfo=
   dependencies:
     assert-plus "^1.0.0"
+
+gitgraph@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/gitgraph/-/gitgraph-0.0.1.tgz#d6a2ed2d872d0130a60218f62141d075f5fe8575"
+  integrity sha512-0VrAm9c2nQSRjjzc40WGFuMbZU/pVHj7fJYDKOzW81+e0d/u7hkhPGVJzsWonPbdStqTTE3YaBwYJK5W8AwbDA==
+  dependencies:
+    request "^2.87.0"
 
 glob-base@^0.3.0:
   version "0.3.0"

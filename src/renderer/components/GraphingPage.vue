@@ -2,7 +2,7 @@
   <div id="wrapper">
     <!-- <img id="logo" src="~@/assets/logo.png" alt="electron-vue"> -->
     <main>
-      <force-graph />
+      <force-graph :wsdata="this.$route.params.depdiffs[0]" />
     </main>
   </div>
 </template>
@@ -15,7 +15,7 @@
   import ForceGraph from './graph/ForceGraph'
 
   export default {
-    name: 'landing-page',
+    name: 'graphing-page',
     components: { SystemInformation, Sidebar, D3Network, SimpleGraph, ForceGraph },
     methods: {
       open (link) {
